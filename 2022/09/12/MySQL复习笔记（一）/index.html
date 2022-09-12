@@ -1,0 +1,492 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>MySQL复习笔记（一） | 我亦无他，惟手熟尔</title><meta name="keywords" content="MySQL,数据库"><meta name="author" content="麻先森,15503483980@126.com"><meta name="copyright" content="麻先森"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="1. root用户密码忘记，重置的操作 通过任务管理器或者服务管理，关掉mysqld(服务进程)  通过命令行+特殊参数开启mysqld mysqld –defaults-file&#x3D;”D:\ProgramFiles\mysql\MySQLServer5.7Data\my.ini” –skip-grant-tables 此时，mysqld服务进程已经打开。并且不需要权限检查  mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL复习笔记（一）">
+<meta property="og:url" content="http://example.com/2022/09/12/MySQL%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="我亦无他，惟手熟尔">
+<meta property="og:description" content="1. root用户密码忘记，重置的操作 通过任务管理器或者服务管理，关掉mysqld(服务进程)  通过命令行+特殊参数开启mysqld mysqld –defaults-file&#x3D;”D:\ProgramFiles\mysql\MySQLServer5.7Data\my.ini” –skip-grant-tables 此时，mysqld服务进程已经打开。并且不需要权限检查  mysql">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img.zcool.cn/community/01fe435bea45eda80120925284fb59.jpg">
+<meta property="article:published_time" content="2022-09-12T13:14:37.000Z">
+<meta property="article:modified_time" content="2022-09-12T13:17:09.054Z">
+<meta property="article:author" content="麻先森">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.zcool.cn/community/01fe435bea45eda80120925284fb59.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/09/12/MySQL%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"Author: 麻先森","link":"Link: ","source":"Source: 我亦无他，惟手熟尔","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MySQL复习笔记（一）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2022-09-12 21:17:09'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://marketplace.canva.cn/cRSRE/MACF30cRSRE/2/tl/canva-MACF30cRSRE.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://img.zcool.cn/community/01fe435bea45eda80120925284fb59.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">我亦无他，惟手熟尔</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">MySQL复习笔记（一）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-09-12T13:14:37.000Z" title="Created 2022-09-12 21:14:37">2022-09-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-09-12T13:17:09.054Z" title="Updated 2022-09-12 21:17:09">2022-09-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Tec/">Tec</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="MySQL复习笔记（一）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="1-root用户密码忘记，重置的操作"><a href="#1-root用户密码忘记，重置的操作" class="headerlink" title="1. root用户密码忘记，重置的操作"></a>1. root用户密码忘记，重置的操作</h2><ol>
+<li>通过任务管理器或者服务管理，关掉mysqld(服务进程) </li>
+<li>通过命令行+特殊参数开启mysqld mysqld –defaults-file&#x3D;”D:\ProgramFiles\mysql\MySQLServer5.7Data\my.ini” –skip-grant-tables</li>
+<li>此时，mysqld服务进程已经打开。并且不需要权限检查 </li>
+<li>mysql -uroot 无密码登陆服务器。另启动一个客户端进行 </li>
+<li>修改权限表 （1） use mysql; （2）update user set authentication_string&#x3D;password(‘新密码’) where user&#x3D;’root’ and Host&#x3D;’localhost’; （3）flush privileges;</li>
+<li>通过任务管理器，关掉mysqld服务进程。 </li>
+<li>再次通过服务管理，打开mysql服务。 </li>
+<li>即可用修改后的新密码登陆。</li>
+</ol>
+<h2 id="2-SQL语言的规则与规范"><a href="#2-SQL语言的规则与规范" class="headerlink" title="2. SQL语言的规则与规范"></a>2. SQL语言的规则与规范</h2><h3 id="2-1-规则"><a href="#2-1-规则" class="headerlink" title="2.1 规则"></a>2.1 规则</h3><ul>
+<li><p>字符串型和日期时间类型的数据可以使用单引号（’ ‘）表示</p>
+</li>
+<li><p>列的别名，尽量使用双引号（” “），而且不建议省略as</p>
+</li>
+</ul>
+<h3 id="2-2-规范"><a href="#2-2-规范" class="headerlink" title="2.2 规范"></a>2.2 规范</h3><ul>
+<li>MySQL 在 Windows 环境下是大小写不敏感的</li>
+<li>MySQL 在 Linux 环境下是大小写敏感的<ul>
+<li>数据库名、表名、表的别名、变量名是严格区分大小写的</li>
+<li>关键字、函数名、列名(或字段名)、列的别名(字段的别名) 是忽略大小写的。</li>
+</ul>
+</li>
+<li>推荐采用统一的书写规范：<ul>
+<li>数据库名、表名、表别名、字段名、字段别名等都小写</li>
+<li>SQL 关键字、函数名、绑定变量等都大写</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-3-注释"><a href="#2-3-注释" class="headerlink" title="2.3 注释"></a>2.3 注释</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">单行注释：#注释文字(MySQL特有的方式)</span><br><span class="line">单行注释：<span class="comment">-- 注释文字(--后面必须包含一个空格。)</span></span><br><span class="line">多行注释：<span class="comment">/* 注释文字 */</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-导入sql脚本"><a href="#2-4-导入sql脚本" class="headerlink" title="2.4 导入sql脚本"></a>2.4 导入sql脚本</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span>source d:\msqldb.sql</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-查询"><a href="#3-查询" class="headerlink" title="3. 查询"></a>3. 查询</h2><h3 id="3-1-DISTINCT"><a href="#3-1-DISTINCT" class="headerlink" title="3.1 DISTINCT"></a>3.1 DISTINCT</h3><p><strong>在SELECT语句中使用关键字DISTINCT去除重复行</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">DISTINCT</span> dept_id</span><br><span class="line"><span class="keyword">from</span> employees;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-空值参与运算"><a href="#3-2-空值参与运算" class="headerlink" title="3.2 空值参与运算"></a>3.2 空值参与运算</h3><p><strong>所有运算符或列值遇到null值，运算的结果都为null</strong></p>
+<h3 id="3-3-查询常数"><a href="#3-3-查询常数" class="headerlink" title="3.3 查询常数"></a>3.3 查询常数</h3><p>SELECT 查询还可以对常数进行查询。对的，就是在 SELECT 查询结果中增加一列固定的常数列。这列的取值是我们指定的，而不是从数据表中动态取出的。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="string">&#x27;象限科技&#x27;</span> <span class="keyword">as</span> corporation,last_name <span class="keyword">from</span> employees;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-显示表结构"><a href="#3-4-显示表结构" class="headerlink" title="3.4 显示表结构"></a>3.4 显示表结构</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DESCRIBE</span> employees;</span><br><span class="line">或</span><br><span class="line"><span class="keyword">DESC</span> employees;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-5-WHERE"><a href="#3-5-WHERE" class="headerlink" title="3.5 WHERE"></a>3.5 WHERE</h3><p><strong>WHERE语句紧随from语句</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 字段<span class="number">1</span>,字段<span class="number">2</span>，......</span><br><span class="line"><span class="keyword">from</span> 表名</span><br><span class="line"><span class="keyword">where</span> 过滤条件</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-运算符"><a href="#4-运算符" class="headerlink" title="4. 运算符"></a>4. 运算符</h2><h3 id="4-1-算术运算符"><a href="#4-1-算术运算符" class="headerlink" title="4.1 算术运算符"></a>4.1 算术运算符</h3><h4 id="4-1-1-加减"><a href="#4-1-1-加减" class="headerlink" title="4.1.1 加减"></a>4.1.1 加减</h4><ul>
+<li>一个整数类型的值对整数进行加法和减法操作，结果还是一个整数；</li>
+<li>一个整数类型的值对浮点数进行加法和减法操作，结果是一个浮点数；</li>
+<li>加法和减法的优先级相同，进行先加后减操作与进行先减后加操作的结果是一样的；</li>
+<li>在Java中，+的左右两边如果有字符串，那么表示字符串的拼接。但是在MySQL中+只表示数值相加。如果遇到非数值类型，先尝试转成数值，如果转失败，就按0计算。（补充：MySQL中字符串拼接要使用字符串函数CONCAT()实现）</li>
+</ul>
+<h4 id="4-1-2-乘除"><a href="#4-1-2-乘除" class="headerlink" title="4.1.2 乘除"></a>4.1.2 乘除</h4><ul>
+<li>一个数乘以整数1和除以整数1后仍得原数；</li>
+<li>一个数乘以浮点数1和除以浮点数1后变成浮点数，数值与原数相等；</li>
+<li>一个数除以整数后，不管是否能除尽，结果都为一个浮点数；</li>
+<li>一个数除以另一个数，除不尽时，结果为一个浮点数，并保留到小数点后4位；</li>
+<li>乘法和除法的优先级相同，进行先乘后除操作与先除后乘操作，得出的结果相同。</li>
+<li>在数学运算中，0不能用作除数，在MySQL中，一个数除以0为NULL。</li>
+</ul>
+<h3 id="4-2-比较运算符"><a href="#4-2-比较运算符" class="headerlink" title="4.2 比较运算符"></a>4.2 比较运算符</h3><h4 id="4-2-1-等号运算符"><a href="#4-2-1-等号运算符" class="headerlink" title="4.2.1 等号运算符"></a>4.2.1 等号运算符</h4><ul>
+<li>等号运算符（&#x3D;）判断等号两边的值、字符串或表达式是否相等，如果相等则返回1，不相等则返回0。</li>
+<li>在使用等号运算符时，遵循如下规则：<ul>
+<li>如果等号两边的值、字符串或表达式都为字符串，则MySQL会按照字符串进行比较，其比较的是每个字符串中字符的ANSI编码是否相等。</li>
+<li>如果等号两边的值都是整数，则MySQL会按照整数来比较两个值的大小。</li>
+<li>如果等号两边的值一个是整数，另一个是字符串，则MySQL会将字符串转化为数字进行比较。</li>
+<li>如果等号两边的值、字符串或表达式中有一个为NULL，则比较结果为NULL。</li>
+</ul>
+</li>
+<li>对比：SQL中赋值符号使用 :&#x3D;</li>
+<li>使用安全等于运算符时，两边的操作数的值都为NULL时，返回的结果为1而不是NULL，其他返回结果与等于运算符相同。</li>
+</ul>
+<h4 id="4-2-2-不等于运算符"><a href="#4-2-2-不等于运算符" class="headerlink" title="4.2.2 不等于运算符"></a>4.2.2 不等于运算符</h4><p>不等于运算符（&lt;&gt;和!&#x3D;）用于判断两边的数字、字符串或者表达式的值是否不相等，<br>如果不相等则返回1，相等则返回0。不等于运算符不能判断NULL值。如果两边的值有任意一个为NULL，或两边都为NULL，则结果为NULL。</p>
+<h4 id="4-2-3-非符号运算符"><a href="#4-2-3-非符号运算符" class="headerlink" title="4.2.3 非符号运算符"></a>4.2.3 非符号运算符</h4><p><img src="/8e5173f4eaa139b03f29650befd62ba3.png" alt="截图"></p>
+<h4 id="4-2-4-判空运算符"><a href="#4-2-4-判空运算符" class="headerlink" title="4.2.4 判空运算符"></a>4.2.4 判空运算符</h4><ul>
+<li>空运算符（IS NULL或者ISNULL）判断一个值是否为NULL，如果为NULL则返回1，否则返回0。 </li>
+<li>非空运算符（IS NOT NULL）判断一个值是否不为NULL，如果不为NULL则返回1，否则返回0。</li>
+</ul>
+<h4 id="4-2-5-最值运算符"><a href="#4-2-5-最值运算符" class="headerlink" title="4.2.5 最值运算符"></a>4.2.5 最值运算符</h4><ul>
+<li><strong>最小值</strong>语法格式为：LEAST(值1，值2，…，值n)。其中，“值n”表示参数列表中有n个值。在有两个或多个参数的情况下，返回最小值。</li>
+<li><strong>最大值</strong>语法格式为：GREATEST(值1，值2，…，值n)。其中，n表示参数列表中有n个值。当有两个或多个参数时，返回值为最大值。假如任意一个自变量为NULL，则GREATEST()的返回值为NULL。<ul>
+<li>当参数中是整数或者浮点数时，GREATEST将返回其中最大的值；当参数为字符串时，返回字母表中顺序最靠后的字符；当比较值列表中有NULL时，不能判断大小，返回值为NULL。</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-2-6-其他常用运算符"><a href="#4-2-6-其他常用运算符" class="headerlink" title="4.2.6 其他常用运算符"></a>4.2.6 其他常用运算符</h4><ul>
+<li>BETWEEN AND运算符</li>
+<li><strong>IN运算符</strong> IN运算符用于判断给定的值是否是IN列表中的一个值，如果是则返回1，否则返回0。如果给定的值为NULL，或者IN列表中存在NULL，则结果为NULL。</li>
+<li>NOT IN运算符</li>
+<li>LIKE运算符，如果给定的值或者匹配条件为NULL，则返回结果为NULL。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">“<span class="operator">%</span>”：匹配<span class="number">0</span>个或多个字符。</span><br><span class="line">“_”：只能匹配一个字符。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>ESCAPE</p>
+<ul>
+<li>回避特殊符号的：使用转义符。例如：将[%]转为[$%]、[]转为[$]，然后再加上[ESCAPE‘$’]即可。<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> job_id</span><br><span class="line"><span class="keyword">FROM</span> jobs</span><br><span class="line"><span class="keyword">WHERE</span> job_id <span class="keyword">LIKE</span> ‘IT\_<span class="operator">%</span>‘;</span><br></pre></td></tr></table></figure></li>
+<li>如果使用\表示转义，要省略ESCAPE。如果不是\，则要加上ESCAPE。<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> job_id</span><br><span class="line"><span class="keyword">FROM</span> jobs</span><br><span class="line"><span class="keyword">WHERE</span> job_id <span class="keyword">LIKE</span> ‘IT$_<span class="operator">%</span>‘ <span class="keyword">escape</span> ‘$‘;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>REGEXP运算符</p>
+<ul>
+<li>REGEXP运算符用来匹配字符串，语法格式为： expr REGEXP 匹配条件 。如果expr满足匹配条件，返回1</li>
+</ul>
+<p>（1）‘^’匹配以该字符后面的字符开头的字符串。</p>
+</li>
+</ul>
+<p>（2）‘$’匹配以该字符前面的字符结尾的字符串。<br>（3）‘.’匹配任何一个单字符。<br>（4）“[…]”匹配在方括号内的任何字符。例如，“[abc]”匹配“a”或“b”或“c”。为了命名字符的范围，使用一个‘-’。“[a-z]”匹配任何字母，而“[0-9]”匹配任何数字。<br>（5）‘<em>’匹配零个或多个在它前面的字符。例如，“x</em>”匹配任何数量的‘x’字符，“[0-9]<em>”匹配任何数量的数字，而“</em>”匹配任何数量的任何字符。<br>  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#示例一</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="string">&#x27;shkstart&#x27;</span> REGEXP <span class="string">&#x27;^s&#x27;</span>, <span class="string">&#x27;shkstart&#x27;</span> REGEXP <span class="string">&#x27;t$&#x27;</span>, <span class="string">&#x27;shkstart&#x27;</span> REGEXP <span class="string">&#x27;hk&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+------------------------+-------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="string">&#x27;shkstart&#x27;</span> REGEXP <span class="string">&#x27;^s&#x27;</span> <span class="operator">|</span> <span class="string">&#x27;shkstart&#x27;</span> REGEXP <span class="string">&#x27;t$&#x27;</span> <span class="operator">|</span> <span class="string">&#x27;shkstart&#x27;</span> REGEXP <span class="string">&#x27;hk&#x27;</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+------------------------+-------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span> <span class="operator">|</span> <span class="number">1</span> <span class="operator">|</span> <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+------------------------+-------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br><span class="line">#示例二</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="string">&#x27;atguigu&#x27;</span> REGEXP <span class="string">&#x27;gu.gu&#x27;</span>, <span class="string">&#x27;atguigu&#x27;</span> REGEXP <span class="string">&#x27;[ab]&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="string">&#x27;atguigu&#x27;</span> REGEXP <span class="string">&#x27;gu.gu&#x27;</span> <span class="operator">|</span> <span class="string">&#x27;atguigu&#x27;</span> REGEXP <span class="string">&#x27;[ab]&#x27;</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span> <span class="operator">|</span> <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure></p>
+<h3 id="4-3-逻辑运算符"><a href="#4-3-逻辑运算符" class="headerlink" title="4.3 逻辑运算符"></a>4.3 逻辑运算符</h3><p><img src="/7330acc02e8d9502e61289799d025429.png" alt="截图"></p>
+<ul>
+<li>逻辑与（AND或&amp;&amp;）运算符是当给定的所有值均为非0值，并且都不为NULL时，返回1；当给定的一个值或者多个值为0时则返回0；否则返回NULL。</li>
+<li><strong>注意</strong><br>OR可以和AND一起使用，但是在使用时要注意两者的优先级，由于AND的优先级高于OR，因此先对AND两边的操作数进行操作，再与OR中的操作数结合。</li>
+</ul>
+<h3 id="4-4-位运算符"><a href="#4-4-位运算符" class="headerlink" title="4.4 位运算符"></a>4.4 位运算符</h3><p><img src="/4a1a29f7d1f77e2684cca7e1ac6f4923.png" alt="截图"></p>
+<h3 id="4-5-运算符的优先级"><a href="#4-5-运算符的优先级" class="headerlink" title="4.5 运算符的优先级"></a>4.5 运算符的优先级</h3><p><img src="/81e8b0e7e14c9b972cbd6cec8f5c969a.png" alt="截图"></p>
+<p>数字编号越大，优先级越高。</p>
+<h3 id="4-6-正则表达式"><a href="#4-6-正则表达式" class="headerlink" title="4.6 正则表达式"></a>4.6 正则表达式</h3><p>MySQL中使用REGEXP关键字指定正则表达式的字符匹配模式。下表列出了REGEXP操作符中常用字符匹配列表。</p>
+<p><img src="/551911ed17f291a5da163fb9446eb0ed.png" alt="截图"></p>
+<h2 id="5-排序与分页"><a href="#5-排序与分页" class="headerlink" title="5. 排序与分页"></a>5. 排序与分页</h2><h3 id="5-1-排序数据"><a href="#5-1-排序数据" class="headerlink" title="5.1 排序数据"></a>5.1 排序数据</h3><h4 id="5-1-1-规则"><a href="#5-1-1-规则" class="headerlink" title="5.1.1 规则"></a>5.1.1 规则</h4><ul>
+<li>ASC(ascend)升序、DESC(descend)降序</li>
+<li>ORDER BY 子句在SELECT语句的结尾</li>
+</ul>
+<h4 id="5-1-2-单列排序"><a href="#5-1-2-单列排序" class="headerlink" title="5.1.2 单列排序"></a>5.1.2 单列排序</h4><h4 id="5-1-3-多列排序"><a href="#5-1-3-多列排序" class="headerlink" title="5.1.3 多列排序"></a>5.1.3 多列排序</h4><ul>
+<li>可以使用不在SELECT列表中的列排序。</li>
+<li>在对多列进行排序的时候，首先排序的第一列必须有相同的列值，才会对第二列进行排序。如果第一列数据中所有值都是唯一的，将不再对第二列进行排序。</li>
+</ul>
+<h3 id="5-2-分页"><a href="#5-2-分页" class="headerlink" title="5.2 分页"></a>5.2 分页</h3><h4 id="5-2-1-规则"><a href="#5-2-1-规则" class="headerlink" title="5.2.1 规则"></a>5.2.1 规则</h4><ul>
+<li>格式：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LIMIT 位置偏移量,行数</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>举例</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--前10条记录：</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表名 LIMIT <span class="number">0</span>,<span class="number">10</span>;</span><br><span class="line">或者</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表名 LIMIT <span class="number">10</span>;</span><br><span class="line"><span class="comment">--第11至20条记录：</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表名 LIMIT <span class="number">10</span>,<span class="number">10</span>;</span><br><span class="line"><span class="comment">--第21至30条记录：</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表名 LIMIT <span class="number">20</span>,<span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<p><em>MySQL 8.0中可以使用“LIMIT 3 OFFSET 4”，意思是获取从第5条记录开始后面的3条记录，和“LIMIT 4,3;”返回的结果相同。</em></p>
+<ul>
+<li>分页显式公式：（当前页数-1）*每页条数，每页条数</li>
+<li><strong>注意：LIMIT 子句必须放在整个SELECT语句的最后！</strong></li>
+</ul>
+<h2 id="6-多表查询"><a href="#6-多表查询" class="headerlink" title="6. 多表查询"></a>6. 多表查询</h2><h3 id="6-1-笛卡尔积"><a href="#6-1-笛卡尔积" class="headerlink" title="6.1 笛卡尔积"></a>6.1 笛卡尔积</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#案例：查询员工的姓名及其部门名称</span><br><span class="line"><span class="keyword">SELECT</span> last_name, department_name</span><br><span class="line"><span class="keyword">FROM</span> employees, departments;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(employee_id) <span class="keyword">FROM</span> employees;</span><br><span class="line">#输出<span class="number">107</span>行</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(department_id)<span class="keyword">FROM</span> departments;</span><br><span class="line">#输出<span class="number">27</span>行</span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">107</span><span class="operator">*</span><span class="number">27</span> <span class="keyword">FROM</span> dual;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>笛卡尔积的错误会在下面条件下产生：<ul>
+<li>省略多个表的连接条件（或关联条件）</li>
+<li>连接条件（或关联条件）无效</li>
+<li>所有表中的所有行互相连接</li>
+</ul>
+</li>
+<li>为了避免笛卡尔积， 可以在 WHERE 加入有效的连接条件。</li>
+<li>加入连接条件后，查询语法：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> table1.column, table2.column</span><br><span class="line"><span class="keyword">FROM</span> table1, table2</span><br><span class="line"><span class="keyword">WHERE</span> table1.column1 <span class="operator">=</span> table2.column2; #连接条件</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-多表查询分类讲解"><a href="#6-2-多表查询分类讲解" class="headerlink" title="6.2 多表查询分类讲解"></a>6.2 多表查询分类讲解</h3><h4 id="6-2-1-分类1：等值连接-vs-非等值连接"><a href="#6-2-1-分类1：等值连接-vs-非等值连接" class="headerlink" title="6.2.1 分类1：等值连接 vs 非等值连接"></a>6.2.1 分类1：等值连接 vs 非等值连接</h4><h5 id="等值连接"><a href="#等值连接" class="headerlink" title="等值连接"></a>等值连接</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> e.employee_id, e.last_name, e.department_id,</span><br><span class="line">d.department_id, d.location_id</span><br><span class="line"><span class="keyword">FROM</span> employees e , departments d</span><br><span class="line"><span class="keyword">WHERE</span> e.department_id <span class="operator">=</span> d.department_id;</span><br></pre></td></tr></table></figure>
+
+<p><strong>总结：连接 n个表,至少需要n-1个连接条件。</strong>比如，连接三个表，至少需要两个连接条件。</p>
+<h5 id="非等值连接"><a href="#非等值连接" class="headerlink" title="非等值连接"></a>非等值连接</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#employees表中的列工资应在job_grades表中的最高工资和最低工资之间</span><br><span class="line"><span class="keyword">WHERE</span> e.salary <span class="keyword">BETWEEN</span> j.lowest_sal <span class="keyword">AND</span> j.highest_sal;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-2-2-分类2：自连接-vs-非自连接"><a href="#6-2-2-分类2：自连接-vs-非自连接" class="headerlink" title="6.2.2 分类2：自连接 vs 非自连接"></a>6.2.2 分类2：自连接 vs 非自连接</h4><h5 id="自连接"><a href="#自连接" class="headerlink" title="自连接"></a>自连接</h5><ul>
+<li>当table1和table2本质上是同一张表，只是用取别名的方式虚拟成两张表以代表不同的意义。然后两个表再进行内连接，外连接等查询。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#题目：查询employees表，返回“Xxx works <span class="keyword">for</span> Xxx”</span><br><span class="line"><span class="keyword">SELECT</span> CONCAT(worker.last_name ,<span class="string">&#x27; works for &#x27;</span></span><br><span class="line">      , manager.last_name)</span><br><span class="line"><span class="keyword">FROM</span> employees worker, employees manager</span><br><span class="line"><span class="keyword">WHERE</span> worker.manager_id <span class="operator">=</span> manager.employee_id ;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-2-3-分类3：内连接-vs-外连接"><a href="#6-2-3-分类3：内连接-vs-外连接" class="headerlink" title="6.2.3 分类3：内连接 vs 外连接"></a>6.2.3 分类3：内连接 vs 外连接</h4><ul>
+<li>内连接: 合并具有同一列的两个以上的表的行, <strong>结果集中不包含一个表与另一个表不匹配的行</strong></li>
+<li>外连接: 两个表在连接过程中除了返回满足连接条件的行以外<strong>还返回左（或右）表中不满足条件的行 ，这种连接称为左（或右） 外连接</strong>。没有匹配的行时, 结果表中相应的列为空(NULL)。</li>
+<li>如果是左外连接，则连接条件中左边的表也称为 *主表 *，右边的表称为 <em>从表</em> 。<br>如果是右外连接，则连接条件中右边的表也称为 <em>主表</em> ，左边的表称为 <em>从表</em> 。</li>
+</ul>
+<h5 id="SQL92：使用-创建连接"><a href="#SQL92：使用-创建连接" class="headerlink" title="SQL92：使用(+)创建连接"></a>SQL92：使用(+)创建连接</h5><ul>
+<li>在 SQL92 中采用（+）代表从表所在的位置。即左或右外连接中，(+) 表示哪个是从表。</li>
+<li>Oracle 对 SQL92 支持较好，而 MySQL 则不支持 SQL92 的外连接。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#左外连接</span><br><span class="line"><span class="keyword">SELECT</span> last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees ,departments</span><br><span class="line"><span class="keyword">WHERE</span> employees.department_id <span class="operator">=</span> departments.department_id(<span class="operator">+</span>);</span><br><span class="line">#右外连接</span><br><span class="line"><span class="keyword">SELECT</span> last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees ,departments</span><br><span class="line"><span class="keyword">WHERE</span> employees.department_id(<span class="operator">+</span>) <span class="operator">=</span> departments.department_id;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>而且在 SQL92 中，只有左外连接和右外连接，没有满（或全）外连接。</li>
+</ul>
+<h3 id="6-3-SQL99语法实现多表查询"><a href="#6-3-SQL99语法实现多表查询" class="headerlink" title="6.3 SQL99语法实现多表查询"></a>6.3 SQL99语法实现多表查询</h3><h4 id="6-3-1-语法"><a href="#6-3-1-语法" class="headerlink" title="6.3.1 语法"></a>6.3.1 语法</h4><ul>
+<li>使用JOIN…ON子句创建连接的语法结构：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> table1.column, table2.column,table3.column</span><br><span class="line"><span class="keyword">FROM</span> table1</span><br><span class="line"><span class="keyword">JOIN</span> table2 <span class="keyword">ON</span> table1 和 table2 的连接条件</span><br><span class="line"><span class="keyword">JOIN</span> table3 <span class="keyword">ON</span> table2 和 table3 的连接条件 </span><br><span class="line">#注意是t2和t3的连接条件，这样才能将<span class="number">3</span>个表都连起来</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>语法说明<ul>
+<li>可以使用 ON 子句指定额外的连接条件。</li>
+<li>这个连接条件是与其它条件分开的。</li>
+<li>ON 子句使语句具有更高的易读性。</li>
+<li>关键字 JOIN、INNER JOIN、CROSS JOIN 的含义是一样的，都表示内连接</li>
+</ul>
+</li>
+</ul>
+<h4 id="6-3-2-内连接-INNER-JOIN-的实现"><a href="#6-3-2-内连接-INNER-JOIN-的实现" class="headerlink" title="6.3.2 内连接(INNER JOIN)的实现"></a>6.3.2 内连接(INNER JOIN)的实现</h4><ul>
+<li>语法</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">INNER</span> <span class="keyword">JOIN</span> B表 #<span class="keyword">INNER</span>可以省略</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> e.employee_id, e.last_name, e.department_id,</span><br><span class="line">d.department_id, d.location_id</span><br><span class="line"><span class="keyword">FROM</span> employees e </span><br><span class="line"><span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> d.department_id <span class="operator">=</span> e.department_id</span><br><span class="line"><span class="keyword">JOIN</span> locations l</span><br><span class="line"><span class="keyword">ON</span> d.location_id <span class="operator">=</span> l.location_id;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-3-3-外连接-OUTER-JOIN-的实现"><a href="#6-3-3-外连接-OUTER-JOIN-的实现" class="headerlink" title="6.3.3 外连接(OUTER JOIN)的实现"></a>6.3.3 外连接(OUTER JOIN)的实现</h4><h5 id="6-3-3-1-左外连接-LEFT-OUTER-JOIN"><a href="#6-3-3-1-左外连接-LEFT-OUTER-JOIN" class="headerlink" title="6.3.3.1 左外连接(LEFT OUTER JOIN)"></a>6.3.3.1 左外连接(LEFT OUTER JOIN)</h5><ul>
+<li>语法</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#实现查询结果是A</span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>举例</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> e.last_name, e.department_id, d.department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> (e.department_id <span class="operator">=</span> d.department_id) ;</span><br></pre></td></tr></table></figure>
+
+<h5 id="6-3-3-2-右外连接-RIGHT-OUTER-JOIN"><a href="#6-3-3-2-右外连接-RIGHT-OUTER-JOIN" class="headerlink" title="6.3.3.2 右外连接(RIGHT OUTER JOIN)"></a>6.3.3.2 右外连接(RIGHT OUTER JOIN)</h5><ul>
+<li>语法</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>举例</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> e.last_name, e.department_id, d.department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e</span><br><span class="line"><span class="keyword">RIGHT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> (e.department_id <span class="operator">=</span> d.department_id) ;</span><br></pre></td></tr></table></figure>
+
+<p><em>需要注意的是，LEFT JOIN 和 RIGHT JOIN 只存在于 SQL99 及以后的标准中，在 SQL92 中不存在，只能用 (+) 表示。</em></p>
+<h5 id="6-3-3-3-满外连接-FULL-OUTER-JOIN"><a href="#6-3-3-3-满外连接-FULL-OUTER-JOIN" class="headerlink" title="6.3.3.3 满外连接(FULL OUTER JOIN)"></a>6.3.3.3 满外连接(FULL OUTER JOIN)</h5><ul>
+<li>满外连接的结果 &#x3D; 左右表匹配的数据 + 左表没有匹配到的数据 + 右表没有匹配到的数据。</li>
+<li>SQL99是支持满外连接的。使用FULL JOIN 或 FULL OUTER JOIN来实现。</li>
+<li>需要注意的是，MySQL不支持FULL JOIN，但是可以用 LEFT JOIN UNION RIGHT join代替。</li>
+</ul>
+<h3 id="6-4-UNION的使用"><a href="#6-4-UNION的使用" class="headerlink" title="6.4 UNION的使用"></a>6.4 UNION的使用</h3><p><strong>合并查询结果</strong> 利用UNION关键字，可以给出多条SELECT语句，并将它们的结果组合成单个结果集。合并时，两个表对应的列数和数据类型必须相同，并且相互对应。各个SELECT语句之间使用UNION或UNION ALL关键字分隔。</p>
+<p>语法格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">column</span>,... <span class="keyword">FROM</span> table1</span><br><span class="line"><span class="keyword">UNION</span> [<span class="keyword">ALL</span>]</span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">column</span>,... <span class="keyword">FROM</span> table2</span><br></pre></td></tr></table></figure>
+
+<p><strong>UNION操作符</strong></p>
+<p>UNION 操作符返回两个查询的结果集的并集，去除重复记录。</p>
+<p><strong>UNION操作符</strong></p>
+<p>UNION ALL操作符返回两个查询的结果集的并集。对于两个结果集的重复部分，不去重。</p>
+<p><em>注意：执行UNION ALL语句时所需要的资源比UNION语句少。如果明确知道合并数据后的结果数据不存在重复数据，或者不需要去除重复的数据，则尽量使用UNION ALL语句，以提高数据查询的效率。</em></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#查询中国用户中男性的信息以及美国用户中年男性的用户信息</span><br><span class="line"><span class="keyword">SELECT</span> id,cname <span class="keyword">FROM</span> t_chinamale <span class="keyword">WHERE</span> csex<span class="operator">=</span><span class="string">&#x27;男&#x27;</span></span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">ALL</span></span><br><span class="line"><span class="keyword">SELECT</span> id,tname <span class="keyword">FROM</span> t_usmale <span class="keyword">WHERE</span> tGender<span class="operator">=</span><span class="string">&#x27;male&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-5-7种SQL-JOINS的实现"><a href="#6-5-7种SQL-JOINS的实现" class="headerlink" title="6.5 7种SQL JOINS的实现"></a>6.5 7种SQL JOINS的实现</h3><h4 id="6-5-1-代码实现"><a href="#6-5-1-代码实现" class="headerlink" title="6.5.1 代码实现"></a>6.5.1 代码实现</h4><p><img src="/1b305e7917603de57698fcf7ce9f4cfe.png" alt="截图"></p>
+<br/>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">#中图：内连接 A∩B</span><br><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> e.`department_id` <span class="operator">=</span> d.`department_id`;</span><br><span class="line"></span><br><span class="line">#左上图：左外连接</span><br><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> e.`department_id` <span class="operator">=</span> d.`department_id`;</span><br><span class="line"></span><br><span class="line">#右上图：右外连接</span><br><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> e.`department_id` <span class="operator">=</span> d.`department_id`;</span><br><span class="line"></span><br><span class="line">#左中图：A <span class="operator">-</span> A∩B</span><br><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> e.`department_id` <span class="operator">=</span> d.`department_id`</span><br><span class="line"><span class="keyword">WHERE</span> d.`department_id` <span class="keyword">IS</span> <span class="keyword">NULL</span></span><br><span class="line"></span><br><span class="line">#右中图：B<span class="operator">-</span>A∩B</span><br><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> e.`department_id` <span class="operator">=</span> d.`department_id`</span><br><span class="line"><span class="keyword">WHERE</span> e.`department_id` <span class="keyword">IS</span> NUL</span><br><span class="line"></span><br><span class="line">#左下图</span><br><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> e.`department_id` <span class="operator">=</span> d.`department_id`</span><br><span class="line"><span class="keyword">WHERE</span> d.`department_id` <span class="keyword">IS</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">ALL</span> #没有去重操作，效率高</span><br><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> e.`department_id` <span class="operator">=</span> d.`department_id`;</span><br><span class="line"></span><br><span class="line">#右下图</span><br><span class="line">#左中图 <span class="operator">+</span> 右中图 A ∪B<span class="operator">-</span> A∩B 或者 (A <span class="operator">-</span> A∩B) ∪ （B <span class="operator">-</span> A∩B）</span><br><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> e.`department_id` <span class="operator">=</span> d.`department_id`</span><br><span class="line"><span class="keyword">WHERE</span> d.`department_id` <span class="keyword">IS</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">ALL</span></span><br><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> e.`department_id` <span class="operator">=</span> d.`department_id`</span><br><span class="line"><span class="keyword">WHERE</span> e.`department_id` <span class="keyword">IS</span> <span class="keyword">NULL</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="6-5-2-代码格式小结"><a href="#6-5-2-代码格式小结" class="headerlink" title="6.5.2 代码格式小结"></a>6.5.2 代码格式小结</h4><ul>
+<li>左中图</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#实现A <span class="operator">-</span> A∩B</span><br><span class="line"><span class="keyword">select</span> 字段列表</span><br><span class="line"><span class="keyword">from</span> A表 <span class="keyword">left</span> <span class="keyword">join</span> B表</span><br><span class="line"><span class="keyword">on</span> 关联条件</span><br><span class="line"><span class="keyword">where</span> 从表关联字段 <span class="keyword">is</span> <span class="keyword">null</span> <span class="keyword">and</span> 等其他子句;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>右种图</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#实现B <span class="operator">-</span> A∩B</span><br><span class="line"><span class="keyword">select</span> 字段列表</span><br><span class="line"><span class="keyword">from</span> A表 <span class="keyword">right</span> <span class="keyword">join</span> B表</span><br><span class="line"><span class="keyword">on</span> 关联条件</span><br><span class="line"><span class="keyword">where</span> 从表关联字段 <span class="keyword">is</span> <span class="keyword">null</span> <span class="keyword">and</span> 等其他子句;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>左下图</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#实现查询结果是A∪B</span><br><span class="line">#用左外的A，<span class="keyword">union</span> 右外的B</span><br><span class="line"><span class="keyword">select</span> 字段列表</span><br><span class="line"><span class="keyword">from</span> A表 <span class="keyword">left</span> <span class="keyword">join</span> B表</span><br><span class="line"><span class="keyword">on</span> 关联条件</span><br><span class="line"><span class="keyword">where</span> 等其他子句</span><br><span class="line"><span class="keyword">union</span></span><br><span class="line"><span class="keyword">select</span> 字段列表</span><br><span class="line"><span class="keyword">from</span> A表 <span class="keyword">right</span> <span class="keyword">join</span> B表</span><br><span class="line"><span class="keyword">on</span> 关联条件</span><br><span class="line"><span class="keyword">where</span> 等其他子句;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>右下图</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#实现A∪B <span class="operator">-</span> A∩B 或 (A <span class="operator">-</span> A∩B) ∪ （B <span class="operator">-</span> A∩B）</span><br><span class="line">#使用左外的 (A <span class="operator">-</span> A∩B) <span class="keyword">union</span> 右外的（B <span class="operator">-</span> A∩B）</span><br><span class="line"><span class="keyword">select</span> 字段列表</span><br><span class="line"><span class="keyword">from</span> A表 <span class="keyword">left</span> <span class="keyword">join</span> B表</span><br><span class="line"><span class="keyword">on</span> 关联条件</span><br><span class="line"><span class="keyword">where</span> 从表关联字段 <span class="keyword">is</span> <span class="keyword">null</span> <span class="keyword">and</span> 等其他子句</span><br><span class="line"><span class="keyword">union</span></span><br><span class="line"><span class="keyword">select</span> 字段列表</span><br><span class="line"><span class="keyword">from</span> A表 <span class="keyword">right</span> <span class="keyword">join</span> B表</span><br><span class="line"><span class="keyword">on</span> 关联条件</span><br><span class="line"><span class="keyword">where</span> 从表关联字段 <span class="keyword">is</span> <span class="keyword">null</span> <span class="keyword">and</span> 等其他子句</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-6-SQL99语法新特性"><a href="#6-6-SQL99语法新特性" class="headerlink" title="6.6 SQL99语法新特性"></a>6.6 SQL99语法新特性</h3><h4 id="6-6-1-自然连接"><a href="#6-6-1-自然连接" class="headerlink" title="6.6.1 自然连接"></a>6.6.1 自然连接</h4><p>SQL99 在 SQL92 的基础上提供了一些特殊语法，比如 <strong>NATURAL JOIN</strong> 用来表示自然连接。我们可以把自然连接理解为 SQL92 中的等值连接。它会帮你自动查询两张连接表中 <strong>所有相同的字段</strong> ，然后进行 <strong>等值连接</strong> 。</p>
+<p>在SQL92标准中：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">ON</span> e.`department_id` <span class="operator">=</span> d.`department_id`</span><br><span class="line"><span class="keyword">AND</span> e.`manager_id` <span class="operator">=</span> d.`manager_id`;</span><br></pre></td></tr></table></figure>
+
+<p>在SQL99中你可以写成：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">NATURAL</span> <span class="keyword">JOIN</span> departments d;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-6-2-USING连接"><a href="#6-6-2-USING连接" class="headerlink" title="6.6.2 USING连接"></a>6.6.2 USING连接</h4><p>当我们进行连接的时候，SQL99还支持使用 USING 指定数据表里的 同名字段 进行等值连接。但是只能配合JOIN一起使用。比如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e <span class="keyword">JOIN</span> departments d</span><br><span class="line"><span class="keyword">USING</span> (department_id);</span><br></pre></td></tr></table></figure>
+
+<p>你能看出与自然连接 NATURAL JOIN 不同的是，USING 指定了具体的相同的字段名称，你需要在 USING的括号 () 中填入要指定的同名字段。同时使用 <strong>JOIN…USING</strong> 可以简化 JOIN ON 的等值连接。它与下面的 SQL 查询结果是相同的：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employee_id,last_name,department_name</span><br><span class="line"><span class="keyword">FROM</span> employees e ,departments d</span><br><span class="line"><span class="keyword">WHERE</span> e.department_id <span class="operator">=</span> d.department_id</span><br></pre></td></tr></table></figure>
+
+<p><strong>表连接的约束条件可以有三种方式：WHERE, ON, USING</strong></p>
+<ul>
+<li>WHERE：适用于所有关联查询</li>
+<li>ON ：只能和JOIN一起使用，只能写关联条件。虽然关联条件可以并到WHERE中和其他条件一起写，但分开写可读性更好。</li>
+<li>USING：只能和JOIN一起使用，而且要求两个关联字段在关联表中名称一致，而且只能表示关联字<br>段值相等</li>
+</ul>
+<p><strong>注意</strong></p>
+<p>我们要 控制连接表的数量 。多表连接就相当于嵌套 for 循环一样，非常消耗资源，会让 SQL 查询性能下降得很严重，因此不要连接不必要的表。在许多 DBMS 中，也都会有最大连接表的限制。</p>
+<p><em>【强制】超过三个表禁止 join。需要 join 的字段，数据类型保持绝对一致；多表关联查询时， 保证被关联的字段需要有索引。<br>说明：即使双表 join 也要注意表索引、SQL 性能。</em></p>
+<h2 id="7-单行函数"><a href="#7-单行函数" class="headerlink" title="7. 单行函数"></a>7. 单行函数</h2><h3 id="7-1-函数的理解"><a href="#7-1-函数的理解" class="headerlink" title="7.1 函数的理解"></a>7.1 函数的理解</h3><h4 id="7-1-1-分类"><a href="#7-1-1-分类" class="headerlink" title="7.1.1 分类"></a>7.1.1 分类</h4><p>从函数定义的角度出发，我们可以将函数分成 内置函数 和 自定义函数 。</p>
+<h4 id="7-1-2-不同DBMS函数差异"><a href="#7-1-2-不同DBMS函数差异" class="headerlink" title="7.1.2 不同DBMS函数差异"></a>7.1.2 不同DBMS函数差异</h4><ul>
+<li><p>DBMS 之间的差异性很大，远大于同一个语言不同版本之间的差异。</p>
+</li>
+<li><p>采用 SQL 函数的代码可移植性是很差的</p>
+</li>
+</ul>
+<h4 id="7-1-3-两种SQL函数"><a href="#7-1-3-两种SQL函数" class="headerlink" title="7.1.3 两种SQL函数"></a>7.1.3 两种SQL函数</h4><p><strong>单行函数</strong></p>
+<ul>
+<li>只对一行变换</li>
+<li>每行返回一个结果</li>
+<li>可以嵌套</li>
+</ul>
+<h3 id="7-2-数值函数"><a href="#7-2-数值函数" class="headerlink" title="7.2 数值函数"></a>7.2 数值函数</h3><h4 id="7-2-1-基本函数"><a href="#7-2-1-基本函数" class="headerlink" title="7.2.1 基本函数"></a>7.2.1 基本函数</h4><p><img src="/c944376cc4255db4f6d5f4bb0f195427.png" alt="screen-capture"></p>
+<p>举例：</p>
+<p><img src="/f9eb76bb5104e030b692d2e99c3880b1.png" alt="screen-capture"></p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RADIANS(X)</td>
+<td>将角度转化为弧度，其中，参数x为角度值</td>
+</tr>
+<tr>
+<td>DEGREES(X)</td>
+<td>将弧度转化为角度，其中，参数x为弧度值</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> RADIANS(<span class="number">30</span>),RADIANS(<span class="number">60</span>),RADIANS(<span class="number">90</span>),DEGREES(<span class="number">2</span><span class="operator">*</span>PI()),DEGREES(RADIANS(<span class="number">90</span>))</span><br><span class="line"><span class="keyword">FROM</span> DUAL;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-3-三角函数"><a href="#7-3-三角函数" class="headerlink" title="7.3 三角函数"></a>7.3 三角函数</h3><p><img src="/509b329ead19af20520c5b084888d8ce.png" alt="screen-capture"></p>
+<h3 id="7-4-其他函数"><a href="#7-4-其他函数" class="headerlink" title="7.4 其他函数"></a>7.4 其他函数</h3><p><img src="/d1d135322fa8fa57dcda9405447810b8.png" alt="screen-capture"></p>
+<h3 id="7-5-进制间的转换"><a href="#7-5-进制间的转换" class="headerlink" title="7.5 进制间的转换"></a>7.5 进制间的转换</h3><p><img src="/e05e2f93e441e6cca31378ba1932d1ba.png" alt="screen-capture"></p>
+<h3 id="7-6-字符串函数"><a href="#7-6-字符串函数" class="headerlink" title="7.6 字符串函数"></a>7.6 字符串函数</h3><p><img src="/a23378b57f373e925f4236237ebec6c6.png" alt="screen-capture"></p>
+<p><img src="/d0178ae77e695f8f954852e73a97eeca.png" alt="screen-capture"></p>
+<p><em>注意：MySQL中，字符串的位置是从1开始的。</em></p>
+<h3 id="7-7-日期和时间函数"><a href="#7-7-日期和时间函数" class="headerlink" title="7.7 日期和时间函数"></a>7.7 日期和时间函数</h3><h4 id="7-7-1-获取日期、时间"><a href="#7-7-1-获取日期、时间" class="headerlink" title="7.7.1 获取日期、时间"></a>7.7.1 获取日期、时间</h4><p><img src="/5a69a9b0f6f6d9c20a32e91a2bb34a02.png" alt="screen-capture"></p>
+<h4 id="7-7-2-日期与时间戳的转换"><a href="#7-7-2-日期与时间戳的转换" class="headerlink" title="7.7.2 日期与时间戳的转换"></a>7.7.2 日期与时间戳的转换</h4><p><img src="/7728ccff2f3824e10abb973b3e607151.png" alt="screen-capture"></p>
+<p><img src="/0c63ae2ddc5456ad53f6c4f58c7c2cb7.png" alt="screen-capture"></p>
+<p><em>时间戳:</em> 一串数字</p>
+<h4 id="7-7-3-获取月份、星期、星期数、天数等函数"><a href="#7-7-3-获取月份、星期、星期数、天数等函数" class="headerlink" title="7.7.3  获取月份、星期、星期数、天数等函数"></a>7.7.3  获取月份、星期、星期数、天数等函数</h4><p><img src="/d8f929b49e4627cc717d93f2f1ee3426.png" alt="screen-capture"></p>
+<p><img src="/b95a17370596c1d16ef96f1139ebcae3.png" alt="screen-capture"></p>
+<h4 id="7-7-4-时间和秒钟转换的函数"><a href="#7-7-4-时间和秒钟转换的函数" class="headerlink" title="7.7.4 时间和秒钟转换的函数"></a>7.7.4 时间和秒钟转换的函数</h4><p><img src="/03915bfd08b1a21bdc0dbda563c63a0a.png" alt="screen-capture"></p>
+<h4 id="7-7-5-计算日期和时间的函数"><a href="#7-7-5-计算日期和时间的函数" class="headerlink" title="7.7.5 计算日期和时间的函数"></a>7.7.5 计算日期和时间的函数</h4><p><strong>第一组</strong></p>
+<p><img src="/4aed3b854f46065e63abda46c8ad6432.png" alt="screen-capture"></p>
+<p><strong>第二组</strong></p>
+<p><img src="/f0212f8cf9268220d1791ee474b9e865.png" alt="screen-capture"></p>
+<h4 id="7-7-6-日期的格式化与解析"><a href="#7-7-6-日期的格式化与解析" class="headerlink" title="7.7.6 日期的格式化与解析"></a>7.7.6 日期的格式化与解析</h4><p><img src="/315ce8cb71cd539d15d84a33654e99ac.png" alt="screen-capture"></p>
+<p><img src="/f1e6e73f0022d77a82c63e94003f2772.png" alt="screen-capture"></p>
+<p>GET_FORMAT函数中date_type和format_type参数取值如下：</p>
+<p><img src="/78d308f195be7f19dba054fdc8af0434.png" alt="screen-capture"></p>
+<h3 id="7-8-流程处理函数"><a href="#7-8-流程处理函数" class="headerlink" title="7.8 流程处理函数"></a>7.8 流程处理函数</h3><p>流程处理函数可以根据不同的条件，执行不同的处理流程，可以在SQL语句中实现不同的条件选择。<br>MySQL中的流程处理函数主要包括IF()、IFNULL()和CASE()函数。</p>
+<p><img src="/b5434a8dfc450d9a7b4865370b5a8c7e.png" alt="screen-capture"></p>
+<h3 id="7-9-加密与解密函数"><a href="#7-9-加密与解密函数" class="headerlink" title="7.9 加密与解密函数"></a>7.9 加密与解密函数</h3><p>加密与解密函数主要用于对数据库中的数据进行加密和解密处理，以防止数据被他人窃取。这些函数在保证数据库安全时非常有用。</p>
+<p><img src="/63f6c93ef2382d91eb097f5a156cd9f0.png" alt="screen-capture"></p>
+<p>可以看到，ENCODE(value,password_seed)函数与DECODE(value,password_seed)函数互为反函数。</p>
+<h3 id="7-10-MySQL信息函数"><a href="#7-10-MySQL信息函数" class="headerlink" title="7.10 MySQL信息函数"></a>7.10 MySQL信息函数</h3><p>MySQL中内置了一些可以查询MySQL信息的函数，这些函数主要用于帮助数据库开发或运维人员更好地对数据库进行维护工作。</p>
+<p><img src="/de5c65eda57cf9990620aa29db3cc50c.png" alt="screen-capture"></p>
+<h3 id="7-11-其他函数"><a href="#7-11-其他函数" class="headerlink" title="7.11 其他函数"></a>7.11 其他函数</h3><p>MySQL中有些函数无法对其进行具体的分类，但是这些函数在MySQL的开发和运维过程中也是不容忽视的。<img src="/1bb141f8c6c4a0481137a9b35042c1f6.png" alt="screen-capture"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">麻先森</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/09/12/MySQL%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/">http://example.com/2022/09/12/MySQL%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></div><div class="post_share"><div class="social-share" data-image="https://img.zcool.cn/community/01fe435bea45eda80120925284fb59.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> Donate</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/09/10/%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F/"><img class="next-cover" src="https://ts1.cn.mm.bing.net/th/id/R-C.054fc19abdcbc4d503f625a91f97527e?rik=t7zm7ae%2b8Eb3bQ&amp;riu=http%3a%2f%2fup.deskcity.org%2fpic_source%2f05%2f4f%2fc1%2f054fc19abdcbc4d503f625a91f97527e.jpg&amp;ehk=LOAYpSol9b%2b2RaqlcjK1%2bSlT3fkEjW%2bsfaBFLIwTdt8%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">外键约束</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2022/09/10/DDL%E3%80%81DML%E5%92%8CDCL%E5%8C%BA%E5%88%AB/" title="DDL、DML和DCL区别"><img class="cover" src="https://ts1.cn.mm.bing.net/th/id/R-C.cf553b14756343140112e8f93ab7dc05?rik=330qPPzYc%2fFDxQ&riu=http%3a%2f%2fpic.sucaibar.com%2fpic%2f201308%2f09%2fe7be6a3e18.jpg&ehk=PQpJwUKE0rIbdtXbm9TvS28mcfrz4yu6suQr6sWQZb0%3d&risl=&pid=ImgRaw&r=0" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-10</div><div class="title">DDL、DML和DCL区别</div></div></a></div><div><a href="/2022/09/10/%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F/" title="外键约束"><img class="cover" src="https://ts1.cn.mm.bing.net/th/id/R-C.054fc19abdcbc4d503f625a91f97527e?rik=t7zm7ae%2b8Eb3bQ&riu=http%3a%2f%2fup.deskcity.org%2fpic_source%2f05%2f4f%2fc1%2f054fc19abdcbc4d503f625a91f97527e.jpg&ehk=LOAYpSol9b%2b2RaqlcjK1%2bSlT3fkEjW%2bsfaBFLIwTdt8%3d&risl=&pid=ImgRaw&r=0" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-10</div><div class="title">外键约束</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://marketplace.canva.cn/cRSRE/MACF30cRSRE/2/tl/canva-MACF30cRSRE.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">麻先森</div><div class="author-info__description">我亦无他，惟手熟尔</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/handsomeman80"><i class="fab fa-github"></i><span>Follow me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:15503483980@126.com" target="_blank" title="发送邮件给我"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">朽木自雕，勤能补拙！</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/09/12/MySQL%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" title="MySQL复习笔记（一）"><img src="https://img.zcool.cn/community/01fe435bea45eda80120925284fb59.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL复习笔记（一）"/></a><div class="content"><a class="title" href="/2022/09/12/MySQL%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" title="MySQL复习笔记（一）">MySQL复习笔记（一）</a><time datetime="2022-09-12T13:14:37.000Z" title="Created 2022-09-12 21:14:37">2022-09-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/09/10/%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F/" title="外键约束"><img src="https://ts1.cn.mm.bing.net/th/id/R-C.054fc19abdcbc4d503f625a91f97527e?rik=t7zm7ae%2b8Eb3bQ&amp;riu=http%3a%2f%2fup.deskcity.org%2fpic_source%2f05%2f4f%2fc1%2f054fc19abdcbc4d503f625a91f97527e.jpg&amp;ehk=LOAYpSol9b%2b2RaqlcjK1%2bSlT3fkEjW%2bsfaBFLIwTdt8%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="外键约束"/></a><div class="content"><a class="title" href="/2022/09/10/%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F/" title="外键约束">外键约束</a><time datetime="2022-09-10T10:21:30.000Z" title="Created 2022-09-10 18:21:30">2022-09-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/09/10/DDL%E3%80%81DML%E5%92%8CDCL%E5%8C%BA%E5%88%AB/" title="DDL、DML和DCL区别"><img src="https://ts1.cn.mm.bing.net/th/id/R-C.cf553b14756343140112e8f93ab7dc05?rik=330qPPzYc%2fFDxQ&amp;riu=http%3a%2f%2fpic.sucaibar.com%2fpic%2f201308%2f09%2fe7be6a3e18.jpg&amp;ehk=PQpJwUKE0rIbdtXbm9TvS28mcfrz4yu6suQr6sWQZb0%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="DDL、DML和DCL区别"/></a><div class="content"><a class="title" href="/2022/09/10/DDL%E3%80%81DML%E5%92%8CDCL%E5%8C%BA%E5%88%AB/" title="DDL、DML和DCL区别">DDL、DML和DCL区别</a><time datetime="2022-09-10T10:14:08.000Z" title="Created 2022-09-10 18:14:08">2022-09-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/09/04/%E5%91%A8%E8%AE%B0%EF%BC%888-29-9-4%EF%BC%89/" title="周记（8.29-9.4）"><img src="https://ts1.cn.mm.bing.net/th/id/R-C.d5ef6d09f2e62ec812bb6d5bc8e82d88?rik=5NI5k7oVrR12OA&amp;riu=http%3a%2f%2fup.kukudesk.com%2fpic%2fbf%2f35%2f41%2fbf3541a13ac68c4bee2a43ffd13583e0.jpg&amp;ehk=brfNv1fZTCX%2fmz9ZkAz4Jsd3XtCE2iMpdoFeERbOtkY%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="周记（8.29-9.4）"/></a><div class="content"><a class="title" href="/2022/09/04/%E5%91%A8%E8%AE%B0%EF%BC%888-29-9-4%EF%BC%89/" title="周记（8.29-9.4）">周记（8.29-9.4）</a><time datetime="2022-09-04T00:54:23.000Z" title="Created 2022-09-04 08:54:23">2022-09-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/08/30/c-%E4%B8%8EJava%E7%9A%84%E5%8C%BA%E5%88%AB/" title="c#与Java的区别"><img src="https://ts1.cn.mm.bing.net/th/id/R-C.054fc19abdcbc4d503f625a91f97527e?rik=t7zm7ae%2b8Eb3bQ&amp;riu=http%3a%2f%2fup.deskcity.org%2fpic_source%2f05%2f4f%2fc1%2f054fc19abdcbc4d503f625a91f97527e.jpg&amp;ehk=LOAYpSol9b%2b2RaqlcjK1%2bSlT3fkEjW%2bsfaBFLIwTdt8%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c#与Java的区别"/></a><div class="content"><a class="title" href="/2022/08/30/c-%E4%B8%8EJava%E7%9A%84%E5%8C%BA%E5%88%AB/" title="c#与Java的区别">c#与Java的区别</a><time datetime="2022-08-29T22:47:00.000Z" title="Created 2022-08-30 06:47:00">2022-08-30</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By 麻先森</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">愿你能在这里有所收获</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
